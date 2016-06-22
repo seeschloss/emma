@@ -8,7 +8,7 @@ from distutils.core import setup
 from emmalib import version 
 
 icon_data = glob('icons/*.png')
-glade_data = ['emmalib/emma.glade', 'emmalib/plugins/table_editor/table_editor.glade']
+glade_data = ['glade/emma.glade', 'emmalib/plugins/table_editor/table_editor.glade']
 desktop_data = ['emma.desktop']
 other_data = ['changelog']
 

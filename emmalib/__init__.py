@@ -60,7 +60,7 @@ except:
 
 import pprint
 
-version = "0.7"
+version = "0.7.0+dev"
 new_instance = None
 our_module = None
 
@@ -78,7 +78,7 @@ if os.path.isdir("emmalib"):
     # svn dev env
     emma_share_path = "emmalib"
     icons_path = "icons"
-    glade_path = emma_share_path
+    glade_path = "glade"
 else:
     emma_share_path = os.path.join(sys.prefix, "share/emma/")
     icons_path = os.path.join(emma_share_path, "icons")
@@ -671,7 +671,7 @@ class Emma:
             else:
                 before = query[0:match.start()]
                 after = match.group()
-            addition = "\norder by\n\t"
+            addition = "\nORDER BY\n\t"
         order = ""
         for col, o in new_order:
             if order: order += ",\n\t"
@@ -905,7 +905,7 @@ class Emma:
                     field_selector = "*"
                 else:
                     field_selector = ", ".join(map(self.current_host.escape_field, fields))
-                self.current_host.query("select %s from `%s` where %s limit 1" % (field_selector, table, where))
+                self.current_host.query("SELECT %s FROM `%s` WHERE %s LIMIT 1" % (field_selector, table, where))
                 result = self.current_host.handle.store_result().fetch_row(0)
                 if len(result) < 1:
                     print "error: can't find modfied row!?"
@@ -2497,7 +2497,7 @@ syntax-highlighting, i can open this file using the <b>execute file from disk</b
             update_query = "update `%s` set `%s`=now() where %s limit 1" % (table, field, where)
             if not self.current_host.query(update_query, encoding=q.encoding):
                 return
-            self.current_host.query("select `%s` from `%s` where %s limit 1" % (field, table, where))
+            self.current_host.query("SELECT `%s` FROM `%s` WHERE %s LIMIT 1" % (field, table, where))
             result = self.current_host.handle.store_result().fetch_row(0)
             if len(result) < 1:
                 print "error: can't find modfied row!?"
@@ -2515,7 +2515,7 @@ syntax-highlighting, i can open this file using the <b>execute file from disk</b
             update_query = "update `%s` set `%s`=unix_timestamp(now()) where %s limit 1" % (table, field, where)
             if not self.current_host.query(update_query, encoding=q.encoding):
                 return
-            self.current_host.query("select `%s` from `%s` where %s limit 1" % (field, table, where))
+            self.current_host.query("SELECT `%s` FROM `%s` WHERE %s LIMIT 1" % (field, table, where))
             result = self.current_host.handle.store_result().fetch_row(0)
             if len(result) < 1:
                 print "error: can't find modfied row!?"
@@ -2533,7 +2533,7 @@ syntax-highlighting, i can open this file using the <b>execute file from disk</b
             update_query = "update `%s` set `%s`=password('%s') where %s limit 1" % (table, field, self.current_host.escape(value), where)
             if not self.current_host.query(update_query, encoding=q.encoding):
                 return
-            self.current_host.query("select `%s` from `%s` where %s limit 1" % (field, table, where))
+            self.current_host.query("SELECT `%s` FROM `%s` WHERE %s LIMIT 1" % (field, table, where))
             result = self.current_host.handle.store_result().fetch_row(0)
             if len(result) < 1:
                 print "error: can't find modfied row!?"
@@ -2551,7 +2551,7 @@ syntax-highlighting, i can open this file using the <b>execute file from disk</b
             update_query = "update `%s` set `%s`=sha1('%s') where %s limit 1" % (table, field, self.current_host.escape(value), where)
             if not self.current_host.query(update_query, encoding=q.encoding):
                 return
-            self.current_host.query("select `%s` from `%s` where %s limit 1" % (field, table, where))
+            self.current_host.query("SELECT `%s` FROM `%s` WHERE %s LIMIT 1" % (field, table, where))
             result = self.current_host.handle.store_result().fetch_row(0)
             if len(result) < 1:
                 print "error: can't find modfied row!?"
@@ -2721,7 +2721,7 @@ syntax-highlighting, i can open this file using the <b>execute file from disk</b
                 else:
                     before = query[0:match.start()]
                     after = match.group()
-                addition = "\norder by\n\t"
+                addition = "\nORDER BY\n\t"
             order = ""
             for col, o in new_order:
                 if order: order += ",\n\t"
@@ -2918,9 +2918,9 @@ syntax-highlighting, i can open this file using the <b>execute file from disk</b
             "syntax_highlight_fg_error": "red",
             "pretty_print_uppercase_keywords": "false",
             "pretty_print_uppercase_operators": "false",
-            "template1_last 150 records": "select * from $table$ order by $primary_key$ desc limit 150",
-            "template2_500 records in fs-order": "select * from $table$ limit 500",
-            "template3_quick filter 500": "select * from $table$ where $field_conditions$ limit 500",
+            "template1_last 150 records": "SELECT * FROM $table$ ORDER BY $primary_key$ DESC LIMIT 150",
+            "template2_500 records in fs-order": "SELECT * FROM $table$ LIMIT 500",
+            "template3_quick filter 500": "SELECT * FROM $table$ WHERE $field_conditions$ LIMIT 500",
             "copy_record_as_csv_delim": ",",
             "save_result_as_csv_delim": ",",
             "save_result_as_csv_line_delim": "\\n",
