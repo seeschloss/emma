@@ -31,6 +31,10 @@ setup(name="emma",
 		("share/applications", desktop_data),
 		("share/emma", other_data),
       ],
+	  install_requires=[
+		  'sqlparse',
+		  'sqlite2',
+		  ],
       license="GPL",
       long_description="""
 Emma is a graphical toolkit for MySQL database developers and administrators

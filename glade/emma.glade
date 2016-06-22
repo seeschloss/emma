@@ -75,14 +75,6 @@
                           </widget>
                         </child>
                         <child>
-                          <widget class="GtkSeparatorMenuItem" id="">
-                            <property name="visible">True</property>
-                            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                            <property name="label" translatable="yes">menuitem2</property>
-                            <property name="use_underline">True</property>
-                          </widget>
-                        </child>
-                        <child>
                           <widget class="GtkMenuItem" id="restore_workspace">
                             <property name="visible">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
@@ -686,7 +678,8 @@
                                       <widget class="GtkToolbar" id="inner_query_toolbar">
                                         <property name="visible">True</property>
                                         <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
-                                        <property name="tooltips">False</property>
+                                        <property name="toolbar-style">TOOLBAR_ICONS</property>
+                                        <property name="tooltips">True</property>
                                         <property name="icon_size">GTK_ICON_SIZE_SMALL_TOOLBAR</property>
                                         <child>
                                           <widget class="GtkToolButton" id="add_record_tool">
@@ -733,7 +726,7 @@
                                             <property name="tooltip" translatable="yes">save result as csv</property>
                                             <property name="label" translatable="yes">save result as csv</property>
                                             <property name="use_underline">True</property>
-                                            <property name="stock_id">gtk-save-as</property>
+                                            <property name="stock_id">gtk-convert</property>
                                             <signal name="clicked" handler="on_save_result_clicked"/>
                                           </widget>
                                           <packing>
@@ -1965,6 +1958,14 @@ successor of yamysqlfront</property>
       <widget class="GtkMenuItem" id="copy_record_as_quoted_csv">
         <property name="visible">True</property>
         <property name="label" translatable="yes">copy record as quoted csv</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="on_query_popup"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkImageMenuItem" id="copy_record_as_insert">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">copy record as SQL-Insert</property>
         <property name="use_underline">True</property>
         <signal name="activate" handler="on_query_popup"/>
       </widget>

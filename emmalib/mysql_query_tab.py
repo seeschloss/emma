@@ -20,7 +20,7 @@
 import pango
 import gtk
 import traceback
-import gtksourceview2
+import gtksourceview2 as gtksourceview
 
 class mysql_query_tab:
 	def __init__(self, xml, nb):
@@ -48,17 +48,18 @@ class mysql_query_tab:
 		for attribute, xmlname in renameload.iteritems():
 			self.__dict__[attribute] = xml.get_widget(xmlname)
 
-		self.toolbar.set_style(gtk.TOOLBAR_ICONS)
+		#self.toolbar.set_style(gtk.TOOLBAR_ICONS)
 
+		print "Try to insert gtksourceview \n"
 		# replace textview with gtksourcevice
 		try:
 			org_tv = self.textview
-			manager = gtksourceview.SourceLanguagesManager()
-			language = manager.get_language_from_mime_type("text/x-sql")
+			manager = gtksourceview.language_manager_get_default()
+			language = manager.get_language("sql")
 
-			sb = gtksourceview.SourceBuffer()
-			sb.set_language(language)
-			sv = self.textview = gtksourceview.SourceView(sb)
+			sourceViewBuffer = gtksourceview.Buffer()
+			sourceViewBuffer.set_language(language)
+			sv = self.textview = gtksourceview.View(sourceViewBuffer)
 
 			self.query_text_sw.remove(org_tv)
 			self.query_text_sw.add(sv)
@@ -67,12 +68,12 @@ class mysql_query_tab:
 			# sv config
 			for pt, pn, pd in (
 				(bool, "show_line_numbers", True),
-				(bool, "show_line_markers", False),
-				(int, "tabs_width", 4),
+				(bool, "show_line_marks", False),
+				#(int, "tabs_width", 4),
 				(bool, "auto_indent", True),
 				(bool, "insert_spaces_instead_of_tabs", False),
-				(bool, "show_margin", True),
-				(int, "margin", 80),
+				(bool, "show_right_margin", True),
+				(int, "right_margin_position", 80),
 				(bool, "smart_home_end", True)):
 
 				cn = "sourceview.%s" % pn
@@ -86,10 +87,10 @@ class mysql_query_tab:
 					v = pd
 				method = getattr(sv, "set_%s" % pn)
 				method(v)				
-			# sb config
+			# sourceViewBuffer config
 			for pt, pn, pd in (
-				(bool, "check_brackets", True),
-				(bool, "highlight", True),
+				(bool, "highlight_matching_brackets", True),
+				(bool, "highlight_syntax", True),
 				(int, "max_undo_levels", 15)):
 				
 				cn = "sourceview.%s" % pn
@@ -101,7 +102,7 @@ class mysql_query_tab:
 						v = pt(v)
 				except:
 					v = pd
-				method = getattr(sb, "set_%s" % pn)
+				method = getattr(sourceViewBuffer, "set_%s" % pn)
 				method(v)
 		except:
 			print "error inserting gtksourceview:\n%s" % traceback.format_exc()

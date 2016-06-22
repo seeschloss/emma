@@ -1491,10 +1491,11 @@ the author knows no way to deselect this database. do you want to continue?""" %
         iter = q.model.get_iter_first()
         indices = range(q.model.get_n_columns())
         field_delim = self.config["save_result_as_csv_delim"]
+        field_enclosure = self.config["save_result_as_csv_enclosure"]
         line_delim = self.config["save_result_as_csv_line_delim"]
         try:
             fp = file(filename, "wb")
-            for search, replace in {"\\n": "\n", "\\r": "\r", "\\t": "\t", "\\0": "\0"}.iteritems():
+            for search, replace in {'\\"': "\"", "\\'": "'", "\\n": "\n", "\\r": "\r", "\\t": "\t", "\\0": "\0"}.iteritems():
                 field_delim = field_delim.replace(search, replace)
                 line_delim = line_delim.replace(search, replace)
             while iter:
@@ -1502,7 +1503,10 @@ the author knows no way to deselect this database. do you want to continue?""" %
                 for field in row:
                     value = field
                     if value is None: value = ""
-                    fp.write(value.replace(field_delim, "\\" + field_delim))
+                    value = value.replace(field_enclosure, "\\" + field_enclosure)
+                    fp.write(field_enclosure)
+                    fp.write(value)
+                    fp.write(field_enclosure)
                     fp.write(field_delim)
                 fp.write(line_delim)
                 iter = q.model.iter_next(iter)
@@ -2430,6 +2434,25 @@ syntax-highlighting, i can open this file using the <b>execute file from disk</b
                     value += '"%s"' % v
             self.clipboard.set_text(value)
             self.pri_clipboard.set_text(value)
+        elif item.name == "copy_record_as_insert":
+            col_max = q.model.get_n_columns()
+            table, where, field, value, row_iter = self.get_unique_where(q.last_source, path, 0)
+            value = 'INSERT INTO `%s` SET' % table
+            first = 1
+            columnList = q.treeview.get_columns()
+            for col_num in range(col_max):
+                if first:
+                    first = 0
+                else:
+                    value += ', '
+                value += '`%s` = ' % columnList[col_num].get_title().replace("__", "_")
+                v = q.model.get_value(iter, col_num)
+                if not v is None: 
+                    value += '"%s"' % v
+                else:
+                    value += 'NULL'
+            self.clipboard.set_text(value)
+            self.pri_clipboard.set_text(value)
         elif item.name == "copy_column_as_csv":
             col_max = q.model.get_n_columns()
             for col_num in range(col_max):
@@ -2923,6 +2946,7 @@ syntax-highlighting, i can open this file using the <b>execute file from disk</b
             "template3_quick filter 500": "SELECT * FROM $table$ WHERE $field_conditions$ LIMIT 500",
             "copy_record_as_csv_delim": ",",
             "save_result_as_csv_delim": ",",
+            "save_result_as_csv_enclosure": "\"",
             "save_result_as_csv_line_delim": "\\n",
             "ping_connection_interval": "300",
             "ask_execute_query_from_disk_min_size": "1024000",
