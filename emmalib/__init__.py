@@ -2226,6 +2226,7 @@ syntax-highlighting, i can open this file using the <b>execute file from disk</b
             self.xml.get_widget("cw_apply_button").connect("clicked", self.on_cw_apply)
             self.xml.get_widget("cw_test_button").connect("clicked", self.on_cw_test)
             self.xml.get_widget("cw_abort_button").connect("clicked", lambda *a: self.connection_window.hide())
+            self.connection_window.connect("delete-event", self.on_cw_close)
             self.cw_props = ["name", "host", "port", "user", "password", "database"]
         
         if what == "refresh_host":
@@ -2267,6 +2268,10 @@ syntax-highlighting, i can open this file using the <b>execute file from disk</b
                 self.save_config()
 
         
+    def on_cw_close(self, *args):
+        self.connection_window.hide()
+        return True
+
     def on_cw_apply(self, *args):
         if self.cw_mode == "new":
             data = []
